@@ -1,0 +1,57 @@
+# See the variables.tf file in module-infrastructure for a complete description
+# of the options
+
+module "infrastructure" {
+  #####################################
+  # Do not modify the following lines #
+  source = "module-infrastructure"
+  project = "${var.project}"
+  env     = "${var.env}"
+  customer = "${var.customer}"
+  #####################################
+
+  #extra_admin_users = ["admin"]
+
+  aws_region = "eu-west-1"
+
+  backup_bucket_prefix = "${var.customer}-eu-"
+  keypair_name                    = "cycloid"
+  keypair_public                  = "ssh-rsa XXX"
+
+  zones = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+
+  #infra
+  infra_cidr            = "10.60.0.0/16"
+  infra_private_subnets = ["10.60.0.0/24", "10.60.2.0/24", "10.60.4.0/24"]
+  infra_public_subnets  = ["10.60.1.0/24", "10.60.3.0/24", "10.60.5.0/24"]
+  #staging
+  staging_cidr                = "10.61.0.0/16"
+  staging_private_subnets     = ["10.61.0.0/24", "10.61.4.0/24", "10.61.8.0/24"]
+  staging_public_subnets      = ["10.61.1.0/24", "10.61.5.0/24", "10.61.9.0/24"]
+  staging_rds_subnets         = ["10.61.2.0/24", "10.61.6.0/24", "10.61.10.0/24"]
+  staging_elasticache_subnets = ["10.61.3.0/24", "10.61.7.0/24", "10.61.11.0/24"]
+  #prod
+  prod_cidr                = "10.62.0.0/16"
+  prod_private_subnets     = ["10.62.0.0/24", "10.62.4.0/24", "10.62.8.0/24"]
+  prod_public_subnets      = ["10.62.1.0/24", "10.62.5.0/24", "10.62.9.0/24"]
+  prod_rds_subnets         = ["10.62.2.0/24", "10.62.6.0/24", "10.62.10.0/24"]
+  prod_elasticache_subnets = ["10.62.3.0/24", "10.62.7.0/24", "10.62.11.0/24"]
+
+
+  # If you use the prometheus stack, you can define the provider and define the metrics_allowed_sg variable after creating promeheus
+  # First create infra, second create prometheus, third uncomment variable
+  # metrics_allowed_sg = "${data.terraform_remote_state.prometheus.infra_metrics_sg_allow}"
+
+}
+
+
+#data "terraform_remote_state" "prometheus" {
+#  backend = "s3"
+#
+#  config {
+#    bucket = "${var.customer}-terraform-remote-state"
+#    key    = "prometheus/infra/prometheus-infra.tfstate"
+#    region = "eu-west-1"
+#  }
+#}
+

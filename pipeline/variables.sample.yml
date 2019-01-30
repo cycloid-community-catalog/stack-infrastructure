@@ -1,0 +1,25 @@
+env: ($ environment $)
+customer: ($ organization_canonical $)
+project: ($ project $)
+
+terraform_storage_bucket_name: ($ organization_canonical $)-terraform-remote-state
+terraform_storage_bucket_path: infrastructure/($ environment $)
+
+aws_default_region: eu-west-1
+
+# Time between 2 check on git
+git_check_every: 2m
+
+stack_git_repository: https://github.com/cycloid-community-catalog/stack-infrastructure
+stack_git_branch: master
+
+config_git_repository: ssh://myUserId@git-codecommit.eu-west-1.amazonaws.com/v1/repos/myRepo
+config_git_branch: config
+# From creds manager
+config_git_key: ((git_config_ro.ssh_key))
+
+# Keys from creds manager
+aws_access_key: ((aws_admin.access_key))
+aws_secret_key: ((aws_admin.secret_key))
+bastion_keypair: ((ssh_bastion_keypair.ssh_key))
+ansible_password: ((raw_ansible_password))

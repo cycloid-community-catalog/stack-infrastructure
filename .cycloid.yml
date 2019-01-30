@@ -1,0 +1,32 @@
+# Configuration of the CI pipeline
+name: 'infrastructure'
+canonical: 'stack-infrastructure'
+description: 'This stack will create Amazon vpc, a bastion ec2 server and various components you might require to deploy other stacks in production.'
+image: 'https://raw.githubusercontent.com/cycloid-community-catalog/stack-infrastructure/master/icon.png'
+keywords:
+  - 'infrastructure'
+  - 'vpc'
+  - 's3'
+  - 'bastion'
+  - 'ses'
+  - 'deployment'
+author: 'Cycloid'
+type: 'infra'
+
+config:
+  # Configuration of the CI pipeline
+  pipeline:
+    pipeline:
+      path: 'pipeline/infrastructure.yml'
+    variables:
+      path: 'pipeline/variables.sample.yml'
+  # Configuration of terraform to setup the infrastructure
+  terraform:
+    infrastructure:
+      path: 'terraform/infrastructure.tf.sample'
+      destination: 'infrastructure/terraform/($ environment $)/infrastructure.tf'
+  ansible:
+    magento:
+      path: 'ansible/environments/bastion.yml.sample'
+      destination: '($ project $)/ansible/($ environment $)-bastion.yml'
+

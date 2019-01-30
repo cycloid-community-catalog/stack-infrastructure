@@ -1,0 +1,31 @@
+## Backups
+#backup_snapshots:
+#  fronts:
+#    tags:
+#      role: front
+#      project: "{{project}}"
+#    instances: []
+#    autoscaling_limit: false
+#    dry_run: false
+#    root_device: true
+#    delete_only: false
+#    cold_snapshot: false
+#    retention:
+#      number: 1
+#      type: w
+#    cron: "30 2 * * *"
+#    region: eu-west-1
+
+#
+# Telegraf
+#
+
+# See telegraf inputs for more plugings https://github.com/influxdata/telegraf/tree/master/plugins/inputs
+# Like https://github.com/influxdata/telegraf/tree/master/plugins/inputs/net_response for tcp port checks
+#telegraf_plugins_extra:
+#  http_response_prod_lb:
+#    plugin: http_response
+#    config:
+#      - address = "https://example.com/"
+#      - response_string_match = 'Title'
+#      - "[inputs.http_response.headers]"
