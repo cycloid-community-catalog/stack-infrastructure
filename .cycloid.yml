@@ -11,7 +11,18 @@ keywords:
   - 'ses'
   - 'deployment'
 author: 'Cycloid'
-type: 'infra'
+type: 'stack'
+technologies:
+  - technology: Amazon VPC
+    version: n/a
+  - technology: Amazon S3 bucket
+    version: n/a
+  - technology: Amazon EC2 bastion
+    version: n/a
+  - technology: Amazon SES
+    version: n/a
+  - technology: Amazon IAM
+    version: n/a
 
 config:
   # Configuration of the CI pipeline
