@@ -230,7 +230,6 @@ jobs:
           ANSIBLE_PLAYBOOK_PATH: ansible-playbook
           ANSIBLE_PLAYBOOK_NAME: bastion.yml
           FORCE_ANSIBLE_GALAXY: false
-          AWS_DEFAULT_REGION: ((aws_default_region))
           EXTRA_VARS:
             customer: ((customer))
             project: ((project))
