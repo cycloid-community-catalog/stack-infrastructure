@@ -33,6 +33,14 @@ resource "aws_eip" "bastion" {
 
   instance = "${aws_instance.bastion.id}"
   vpc      = true
+
+  tags {
+    Name       = "${var.customer}-bastion${count.index}${var.suffix}"
+    client     = "${var.customer}"
+    project    = "${var.project}"
+    env        = "${var.env}"
+    cycloid.io = "true"
+  }
 }
 
 resource "aws_instance" "bastion" {

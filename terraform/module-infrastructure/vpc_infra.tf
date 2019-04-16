@@ -12,7 +12,7 @@ variable "infra_private_subnets" {
 }
 
 variable "infra_public_subnets" {
-  description = "The private subnets for the infra VPC"
+  description = "The public subnets for the infra VPC"
   default     = ["10.0.1.0/24", "10.0.3.0/24", "10.0.5.0/24"]
 }
 
@@ -29,6 +29,14 @@ variable "bastion_allowed_networks" {
 variable "bastion_instance_type" {
   description = "Instance type for the bastion"
   default     = "t2.micro"
+}
+
+# Fix for value of count cannot be computed, generating the count as the same way as amazon vpc module do : https://github.com/terraform-aws-modules/terraform-aws-vpc/blob/master/main.tf#L5
+locals {
+  infra_max_subnet_length = "${max(length(var.infra_private_subnets))}"
+
+  #infra_max_subnet_length = "${max(length(var.infra_private_subnets), length(var.infra_elasticache_subnets), length(var.infra_rds_subnets), length(var.infra_redshift_subnets))}"
+  infra_nat_gateway_count = "${var.single_nat_gateway ? 1 : (var.one_nat_gateway_per_az ? length(var.zones) : local.infra_max_subnet_length)}"
 }
 
 #
@@ -93,8 +101,11 @@ resource "aws_security_group" "allow_bastion_infra" {
 # Create route53 zones
 ## Private zone
 resource "aws_route53_zone" "infra_private" {
-  name   = "${var.customer}.infra"
-  vpc_id = "${module.infra_vpc.vpc_id}"
+  name = "${var.customer}.infra"
+
+  vpc {
+    vpc_id = "${module.infra_vpc.vpc_id}"
+  }
 
   tags {
     client     = "${var.customer}"
