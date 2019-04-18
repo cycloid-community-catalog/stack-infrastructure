@@ -46,12 +46,11 @@ variable "readonly_groups" {
 
 variable "keypair_name" {
   description = "The human-readable keypair name to be used for instances deployment"
-  default     = "deployment"
+  default     = ""
 }
 
 variable "keypair_public" {
   description = "The public SSH key, for SSH access to newly-created instances"
-  default     = "ssh-rsa XXX"
 }
 
 ##### Network environment
@@ -74,5 +73,5 @@ variable "zones" {
 # Allow metrics (prometheus) to collect data from bastion
 variable "metrics_allowed_sg" {
   default     = ""
-  description = "list of security group allowed to reach metrics ports like the node exporter one"
+  description = "Security group allowed to reach metrics ports like the node exporter one"
 }

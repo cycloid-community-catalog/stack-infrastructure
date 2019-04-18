@@ -19,10 +19,11 @@ data "aws_ami" "debian_stretch" {
     values = ["ebs"]
   }
 
-  filter {
-    name   = "image-id"
-    values = ["ami-fe4b3287"]
-  }
+  #filter {
+  #  name   = "image-id"
+  #  values = ["ami-fe4b3287"]
+  #}
 
-  owners = ["379101102735"] # Debian
+  most_recent = true
+  owners      = ["379101102735"] # Debian
 }

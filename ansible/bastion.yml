@@ -1,23 +1,4 @@
 - hosts: "tag_role_bastion:&tag_env_{{ env }}"
-  gather_facts: false
-  # As ec2.py return the private IP, the CI can't connect on the bastion.
-  # So run the playbook locally to get the private ip.
-  connection: local
-  tasks:
-    # Then created a dedicated group for the bastion.
-    # Using as inventory hostname the private IP. And address the public one.
-    # This will allow to connect on the Bastion using the public IP. But have ansible hostvar from
-    # the host declated in ec2.py with the private IP
-    - add_host:
-        name: "{{ inventory_hostname }}"
-        ansible_host: "{{ bastion_ip[0] }}"
-        groups:
-          - bastion
-          - "tag_role_bastion"
-          - "tag_env_{{ env }}"
-          - "tag_project_{{ project }}"
-
-- hosts: bastion
   become: yes
   gather_facts: true
 

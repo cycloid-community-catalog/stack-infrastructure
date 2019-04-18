@@ -12,7 +12,7 @@ variable "staging_private_subnets" {
 }
 
 variable "staging_public_subnets" {
-  description = "The private subnets for the staging VPC"
+  description = "The public subnets for the staging VPC"
   default     = ["10.1.1.0/24", "10.1.3.0/24", "10.1.5.0/24"]
 }
 
@@ -23,12 +23,18 @@ variable "staging_elasticache_subnets" {
 
 variable "staging_rds_subnets" {
   description = "The RDS subnets for the staging VPC"
-  default     = []
+  default     = ["10.1.2.0/24", "10.1.6.0/24", "10.1.10.0/24"]
 }
 
 variable "staging_redshift_subnets" {
   description = "The Redshift subnets for the staging VPC"
   default     = []
+}
+
+# Fix for value of count cannot be computed, generating the count as the same way as amazon vpc module do : https://github.com/terraform-aws-modules/terraform-aws-vpc/blob/master/main.tf#L5
+locals {
+  staging_max_subnet_length = "${max(length(var.staging_private_subnets), length(var.staging_elasticache_subnets), length(var.staging_rds_subnets), length(var.staging_redshift_subnets))}"
+  staging_nat_gateway_count = "${var.single_nat_gateway ? 1 : (var.one_nat_gateway_per_az ? length(var.zones) : local.staging_max_subnet_length)}"
 }
 
 #
@@ -76,7 +82,8 @@ resource "aws_vpc_peering_connection" "infra_staging" {
 }
 
 resource "aws_route" "infra_staging_public" {
-  count = "${length(module.infra_vpc.public_route_table_ids)}"
+  #count = "${length(module.infra_vpc.public_route_table_ids)}"
+  count = "${var.create_vpc && length(var.infra_public_subnets) > 0 ? 1 : 0}"
 
   route_table_id            = "${element(module.infra_vpc.public_route_table_ids, count.index)}"
   destination_cidr_block    = "${var.staging_cidr}"
@@ -84,7 +91,8 @@ resource "aws_route" "infra_staging_public" {
 }
 
 resource "aws_route" "infra_staging_private" {
-  count = "${length(module.infra_vpc.private_route_table_ids)}"
+  #count = "${length(module.infra_vpc.private_route_table_ids)}"
+  count = "${var.create_vpc && local.infra_max_subnet_length > 0 ? local.infra_nat_gateway_count : 0}"
 
   route_table_id            = "${element(module.infra_vpc.private_route_table_ids, count.index)}"
   destination_cidr_block    = "${var.staging_cidr}"
@@ -92,7 +100,8 @@ resource "aws_route" "infra_staging_private" {
 }
 
 resource "aws_route" "staging_infra_public" {
-  count = "${length(module.infra_vpc.public_route_table_ids)}"
+  #count = "${length(module.infra_vpc.public_route_table_ids)}"
+  count = "${var.create_vpc && length(var.staging_public_subnets) > 0 ? 1 : 0}"
 
   route_table_id            = "${element(module.staging_vpc.public_route_table_ids, count.index)}"
   destination_cidr_block    = "${var.infra_cidr}"
@@ -100,7 +109,8 @@ resource "aws_route" "staging_infra_public" {
 }
 
 resource "aws_route" "staging_infra_private" {
-  count = "${length(module.infra_vpc.private_route_table_ids)}"
+  #count = "${length(module.infra_vpc.private_route_table_ids)}"
+  count = "${var.create_vpc && local.staging_max_subnet_length > 0 ? local.staging_nat_gateway_count : 0}"
 
   route_table_id            = "${element(module.staging_vpc.private_route_table_ids, count.index)}"
   destination_cidr_block    = "${var.infra_cidr}"
@@ -141,8 +151,11 @@ resource "aws_security_group" "allow_bastion_staging" {
 # Create route53 zones
 ## Private zone
 resource "aws_route53_zone" "staging_private" {
-  name   = "${var.customer}.staging"
-  vpc_id = "${module.staging_vpc.vpc_id}"
+  name = "${var.customer}.staging"
+
+  vpc {
+    vpc_id = "${module.staging_vpc.vpc_id}"
+  }
 
   tags {
     client     = "${var.customer}"

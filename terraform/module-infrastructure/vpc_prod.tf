@@ -13,7 +13,7 @@ variable "prod_private_subnets" {
 }
 
 variable "prod_public_subnets" {
-  description = "The private subnets for the prod VPC"
+  description = "The public subnets for the prod VPC"
   default     = ["10.2.1.0/24", "10.2.3.0/24", "10.2.5.0/24"]
 }
 
@@ -24,7 +24,7 @@ variable "prod_elasticache_subnets" {
 
 variable "prod_rds_subnets" {
   description = "The RDS subnets for the prod VPC"
-  default     = []
+  default     = ["10.2.2.0/24", "10.2.6.0/24", "10.2.10.0/24"]
 }
 
 variable "prod_redshift_subnets" {
@@ -77,8 +77,31 @@ resource "aws_vpc_peering_connection" "infra_prod" {
   }
 }
 
+variable "create_vpc" {
+  description = "Controls if VPC should be created (it affects almost all resources)"
+  default     = true
+}
+
+variable "single_nat_gateway" {
+  description = "Should be true if you want to provision a single shared NAT Gateway across all of your private networks"
+  default     = true
+}
+
+variable "one_nat_gateway_per_az" {
+  description = "Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`."
+  default     = false
+}
+
+# Fix for value of count cannot be computed, generating the count as the same way as amazon vpc module do : https://github.com/terraform-aws-modules/terraform-aws-vpc/blob/master/main.tf#L5
+locals {
+  prod_max_subnet_length = "${max(length(var.prod_private_subnets), length(var.prod_elasticache_subnets), length(var.prod_rds_subnets), length(var.prod_redshift_subnets))}"
+  prod_nat_gateway_count = "${var.single_nat_gateway ? 1 : (var.one_nat_gateway_per_az ? length(var.zones) : local.prod_max_subnet_length)}"
+}
+
 resource "aws_route" "infra_prod_public" {
-  count = "${length(module.infra_vpc.public_route_table_ids)}"
+  count = "${var.create_vpc && length(var.infra_public_subnets) > 0 ? 1 : 0}"
+
+  #  count = "${length(module.infra_vpc.public_route_table_ids)}"
 
   route_table_id            = "${element(module.infra_vpc.public_route_table_ids, count.index)}"
   destination_cidr_block    = "${var.prod_cidr}"
@@ -86,7 +109,8 @@ resource "aws_route" "infra_prod_public" {
 }
 
 resource "aws_route" "infra_prod_private" {
-  count = "${length(module.infra_vpc.private_route_table_ids)}"
+  #count = "${length(module.infra_vpc.private_route_table_ids)}"
+  count = "${var.create_vpc && local.infra_max_subnet_length > 0 ? local.infra_nat_gateway_count : 0}"
 
   route_table_id            = "${element(module.infra_vpc.private_route_table_ids, count.index)}"
   destination_cidr_block    = "${var.prod_cidr}"
@@ -94,7 +118,8 @@ resource "aws_route" "infra_prod_private" {
 }
 
 resource "aws_route" "prod_infra_public" {
-  count = "${length(module.infra_vpc.public_route_table_ids)}"
+  #count = "${length(module.infra_vpc.public_route_table_ids)}"
+  count = "${var.create_vpc && length(var.prod_public_subnets) > 0 ? 1 : 0}"
 
   route_table_id            = "${element(module.prod_vpc.public_route_table_ids, count.index)}"
   destination_cidr_block    = "${var.infra_cidr}"
@@ -102,7 +127,8 @@ resource "aws_route" "prod_infra_public" {
 }
 
 resource "aws_route" "prod_infra_private" {
-  count = "${length(module.infra_vpc.private_route_table_ids)}"
+  #count = "${length(module.infra_vpc.private_route_table_ids)}"
+  count = "${var.create_vpc && local.prod_max_subnet_length > 0 ? local.prod_nat_gateway_count : 0}"
 
   route_table_id            = "${element(module.prod_vpc.private_route_table_ids, count.index)}"
   destination_cidr_block    = "${var.infra_cidr}"
@@ -143,8 +169,11 @@ resource "aws_security_group" "allow_bastion_prod" {
 # Create route53 zones
 ## Private zone
 resource "aws_route53_zone" "prod_private" {
-  name   = "${var.customer}.prod"
-  vpc_id = "${module.prod_vpc.vpc_id}"
+  name = "${var.customer}.prod"
+
+  vpc {
+    vpc_id = "${module.prod_vpc.vpc_id}"
+  }
 
   tags {
     client     = "${var.customer}"
