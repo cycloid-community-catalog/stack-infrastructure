@@ -39,5 +39,5 @@ config:
   ansible:
     magento:
       path: 'ansible/environments/bastion.yml.sample'
-      destination: '($ project $)/ansible/($ environment $)-bastion.yml'
+      destination: '($ project $)/ansible/environments/($ environment $)-bastion.yml'
 
