@@ -234,7 +234,7 @@ jobs:
           ANSIBLE_PLAYBOOK_PATH: ansible-playbook
           ANSIBLE_PLAYBOOK_NAME: bastion.yml
           EC2_VPC_DESTINATION_VARIABLE: ip_address
-          FORCE_ANSIBLE_GALAXY: false
+          ANSIBLE_FORCE_GALAXY: false
           EXTRA_VARS:
             customer: ((customer))
             project: ((project))
