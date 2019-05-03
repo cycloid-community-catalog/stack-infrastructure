@@ -1,5 +1,7 @@
 # Create a bucket for terraform remote state
 resource "aws_s3_bucket" "terraform_remote_state" {
+  count = "${var.create_s3_bucket_remote_state ? 1 : 0}"
+
   bucket = "${var.customer}-terraform-remote-state"
   acl    = "private"
 
@@ -14,22 +16,4 @@ resource "aws_s3_bucket" "terraform_remote_state" {
     env        = "${var.env}"
     cycloid.io = "true"
   }
-
-  policy = <<EOF
-{
-  "Id": "PolicyAccessTerraformState",
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "AllRights",
-      "Action": "s3:*",
-      "Effect": "Allow",
-      "Resource": "arn:aws:s3:::${var.customer}-terraform-remote-state",
-      "Principal": {
-        "AWS": "${aws_iam_user.infra.arn}"
-      }
-    }
-  ]
-}
-EOF
 }

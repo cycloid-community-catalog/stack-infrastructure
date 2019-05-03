@@ -45,22 +45,32 @@ In order to run this task, couple elements are required within the infrastructur
 
 |Name|Description|Type|Default|Required|
 |---|---|:---:|:---:|:---:|
-|`ansible_vault_password`|Password used by ansible vault to decrypt your vaulted files.|`-`|`((raw_ansible_vault_password))`|`True`|
-|`aws_access_key`|Amazon AWS access key for Terraform. see value format [Here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)|`-`|`((aws.access_key))`|`True`|
-|`aws_default_region`|Amazon AWS region to use for Terraform.|`-`|`eu-west-1`|`True`|
-|`aws_secret_key`|Amazon AWS secret key for Terraform. see value format [Here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)|`-`|`((aws.secret_key))`|`True`|
-|`bastion_keypair`|bastion SSH private key used by ansible to connect on aws ec2 instances and the bastion itself.|`-`|`((ssh_bastion.ssh_key))`|`True`|
-|`config_git_branch`|Branch of the config git repository.|`-`|`config`|`True`|
-|`config_git_private_key`|SSH key pair to fetch the config git repository.|`-`|`((git_config_ro.ssh_key))`|`True`|
-|`config_git_repository`|Git repository url containing the config of the stack.|`-`|`ssh://myUserId@git-codecommit.eu-west-1.amazonaws.com/v1/repos/myRepo`|`True`|
-|`customer`|Name of the Cycloid Organization, used as customer variable name.|`-`|`($ organization_canonical $)`|`True`|
-|`env`|Name of the project's environment.|`-`|`($ environment $)`|`True`|
-|`git_check_every`|Time between 2 check on git resources|`-`|`2m`|`False`|
-|`project`|Name of the project.|`-`|`($ project $)`|`True`|
-|`stack_git_branch`|Git branch of the stack source code.|`-`|`master`|`True`|
-|`stack_git_repository`|Url to the git repository containing infrastructure stack source code.|`-`|`https://github.com/cycloid-community-catalog/stack-infrastructure`|`True`|
-|`terraform_storage_bucket_name`|AWS S3 bucket name to store terraform remote state file.|`-`|`($ organization_canonical $)-terraform-remote-state`|`True`|
-|`terraform_storage_bucket_path`|AWS S3 bucket path to store terraform remote state file.|`-`|`($ project $)/($ environment $)`|`True`|
+|`aws_region`|Name of the region where the infrastructure is created|`-`|`us-east-1`|`False`|
+|`backup_bucket_prefix`|Prefix for the S3 backup bucket (change it if a bucket with the same name already exists) - defaults to '${var.customer}-'|`-`|`""`|`False`|
+|`bastion_allowed_networks`|Networks allowed to connect to the bastion using SSH|`-`|`0.0.0.0/0`|`False`|
+|`bastion_instance_type`|Instance type for the bastion|`-`|`t2.micro`|`False`|
+|`create_infra_user`|admin user infra has to be created or not|`int`|`0`|`False`|
+|`create_s3_bucket_remote_state`|terraform_remote_state s3 bucket has to be created or not|`int`|`0`|`False`|
+|`extra_admin_users`|List of users to give the administrator access role to|`list`|`[]`|`False`|
+|`infra_cidr`|The CIDR of the infra VPC|`-`|`10.0.0.0/16`|`False`|
+|`infra_private_subnets`|The private subnets for the infra VPC|`list`|`["10.0.0.0/24", "10.0.2.0/24", "10.0.4.0/24"]`|`False`|
+|`infra_public_subnets`|The public subnets for the infra VPC|`list`|`["10.0.1.0/24", "10.0.3.0/24", "10.0.5.0/24"]`|`False`|
+|`keypair_name`|The human-readable keypair name to be used for instances deployment|`-`|`"${var.customer}-${var.project}${var.suffix}"`|`False`|
+|`keypair_public`|The public SSH key, for SSH access to newly-created instances|`-`|``|`True`|
+|`metrics_allowed_sg`|If you use the prometheus stack, you can define the provider and define the metrics_allowed_sg variable after creating promeheusFirst create infra, second create prometheus, third uncomment variable|`-`|``|`False`|
+|`prod_cidr`|The CIDR of the prod VPC|`-`|`10.2.0.0/16`|`False`|
+|`prod_elasticache_subnets`|The Elasticache subnets for the prod VPC|`list`|`[]`|`False`|
+|`prod_private_subnets`|The private subnets for the prod VPC|`list`|`["10.2.0.0/24", "10.2.2.0/24", "10.2.4.0/24"]`|`False`|
+|`prod_public_subnets`|The public subnets for the prod VPC|`list`|`["10.2.1.0/24", "10.2.3.0/24", "10.2.5.0/24"]`|`False`|
+|`prod_rds_subnets`|The RDS subnets for the prod VPC|`list`|`["10.2.2.0/24", "10.2.6.0/24", "10.2.10.0/24"]`|`False`|
+|`readonly_groups`||`list`|`[]`|`False`|
+|`readonly_users`|List of users to give a read-only access to|`list`|`[]`|`False`|
+|`staging_cidr`|The CIDR of the staging VPC|`-`|`10.1.0.0/16`|`False`|
+|`staging_elasticache_subnets`|The Elasticache subnets for the staging VPC|`list`|`[]`|`False`|
+|`staging_private_subnets`|The private subnets for the staging VPC|`list`|`["10.1.0.0/24", "10.1.2.0/24", "10.1.4.0/24"]`|`False`|
+|`staging_public_subnets`|The public subnets for the staging VPC|`list`|`["10.1.1.0/24", "10.1.3.0/24", "10.1.5.0/24"]`|`False`|
+|`staging_rds_subnets`|The RDS subnets for the staging VPC|`list`|`["10.1.2.0/24", "10.1.6.0/24", "10.1.10.0/24"]`|`False`|
+|`zones`|The availability zones you want to use|`-`|`[]`|`False`|
 
 ## Terraform
 
@@ -151,4 +161,3 @@ In order to run this task, couple elements are required within the infrastructur
 |`base_manage_host_file`|Set to true if you want the hosts file to be managed|`bool`|`true`|`False`|
 |`base_manage_host_r53`|Set to true if you want internal entries to be created|`bool`|`false`|`False`|
 |`base_r53_internal_zone`|Defines in which internal zone entries should be added in R53|`-`|`""`|`False`|
-

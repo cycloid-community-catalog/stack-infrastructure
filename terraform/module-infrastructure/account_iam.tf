@@ -3,15 +3,20 @@ locals {
 }
 
 resource "aws_iam_user" "infra" {
+  count = "${var.create_infra_user ? 1 : 0}"
+
   name = "infra${var.suffix}"
   path = "/cycloid/"
 }
 
 resource "aws_iam_access_key" "infra" {
-  user = "${aws_iam_user.infra.name}"
+  count = "${var.create_infra_user ? 1 : 0}"
+  user  = "${aws_iam_user.infra.name}"
 }
 
 resource "aws_iam_role_policy_attachment" "infra_administrator_access_role" {
+  count = "${var.create_infra_user ? 1 : 0}"
+
   role       = "admin"
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
