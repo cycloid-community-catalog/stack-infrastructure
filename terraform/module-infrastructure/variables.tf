@@ -25,7 +25,19 @@ variable "backup_bucket_prefix" {
   default     = ""
 }
 
+##### S3 bucket
+
+variable "create_s3_bucket_remote_state" {
+  description = "To know if a terraform_remote_state s3 bucket has to be created or not"
+  default     = 0
+}
+
 ##### IAM and authorizations
+
+variable "create_infra_user" {
+  description = "To know if an admin user infra has to be created or not"
+  default     = 0
+}
 
 variable "extra_admin_users" {
   description = "List of users to give the administrator access role to"
