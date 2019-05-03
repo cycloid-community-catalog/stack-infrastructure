@@ -37,7 +37,7 @@ config:
       path: 'terraform/infrastructure.tf.sample'
       destination: '($ project $)/terraform/($ environment $)/infrastructure.tf'
   ansible:
-    magento:
+    bastion:
       path: 'ansible/environments/bastion.yml.sample'
       destination: '($ project $)/ansible/environments/($ environment $)-bastion.yml'
 
