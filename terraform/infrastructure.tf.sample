@@ -14,14 +14,12 @@ module "infrastructure" {
   #+ Name of the region where the infrastructure is created
   aws_region = "${var.aws_region}"
 
-  backup_bucket_prefix = "${var.customer}-${var.aws_region}-"
-
   #. keypair_name: "${var.customer}-${var.project}${var.suffix}"
   #+ The human-readable keypair name to be used for instances deployment
 
   #. keypair_public (required):
   #+ The public SSH key, for SSH access to newly-created instances
-  keypair_public                  = "ssh-rsa XXX"
+  keypair_public = "ssh-rsa XXX"
 
   #. zones: []
   #+ The availability zones you want to use
@@ -93,11 +91,12 @@ module "infrastructure" {
   #. bastion_allowed_networks: 0.0.0.0/0
   #+ Networks allowed to connect to the bastion using SSH
 
-  #. bastion_instance_type: t2.micro
+  #. bastion_instance_type: t3.micro
   #+ Instance type for the bastion
 
   #. backup_bucket_prefix: ""
   #+ Prefix for the S3 backup bucket (change it if a bucket with the same name already exists) - defaults to '${var.customer}-'
+  backup_bucket_prefix = "${var.customer}-${var.aws_region}-"
 
   #. extra_admin_users (optional, list): []
   #+ List of users to give the administrator access role to
