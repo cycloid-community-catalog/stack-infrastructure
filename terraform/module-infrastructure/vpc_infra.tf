@@ -28,7 +28,7 @@ variable "bastion_allowed_networks" {
 
 variable "bastion_instance_type" {
   description = "Instance type for the bastion"
-  default     = "t2.micro"
+  default     = "t3.micro"
 }
 
 # Fix for value of count cannot be computed, generating the count as the same way as amazon vpc module do : https://github.com/terraform-aws-modules/terraform-aws-vpc/blob/master/main.tf#L5

@@ -48,7 +48,7 @@ In order to run this task, couple elements are required within the infrastructur
 |`aws_region`|Name of the region where the infrastructure is created|`-`|`us-east-1`|`False`|
 |`backup_bucket_prefix`|Prefix for the S3 backup bucket (change it if a bucket with the same name already exists) - defaults to '${var.customer}-'|`-`|`""`|`False`|
 |`bastion_allowed_networks`|Networks allowed to connect to the bastion using SSH|`-`|`0.0.0.0/0`|`False`|
-|`bastion_instance_type`|Instance type for the bastion|`-`|`t2.micro`|`False`|
+|`bastion_instance_type`|Instance type for the bastion|`-`|`t3.micro`|`False`|
 |`create_infra_user`|admin user infra has to be created or not|`int`|`0`|`False`|
 |`create_s3_bucket_remote_state`|terraform_remote_state s3 bucket has to be created or not|`int`|`0`|`False`|
 |`extra_admin_users`|List of users to give the administrator access role to|`list`|`[]`|`False`|
