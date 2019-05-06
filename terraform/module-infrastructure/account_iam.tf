@@ -1,5 +1,5 @@
 locals {
-  admin-users = ["${aws_iam_user.infra.name}", "${var.extra_admin_users}"]
+  admin-users = ["${compact(concat("${aws_iam_user.infra.*.name}", "${var.extra_admin_users}"))}"]
 }
 
 resource "aws_iam_user" "infra" {
