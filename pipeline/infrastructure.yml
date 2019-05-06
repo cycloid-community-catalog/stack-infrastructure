@@ -227,7 +227,7 @@ jobs:
         <<: *run-ansible-from-bastion
         params:
           BASTION_PRIVATE_KEY: ((bastion_keypair))
-          ANSIBLE_VAULT_PASSWORD: ((ansible_password))
+          ANSIBLE_VAULT_PASSWORD: ((ansible_vault_password))
           AWS_DEFAULT_REGION: ((aws_default_region))
           AWS_ACCESS_KEY_ID: ((aws_access_key))
           AWS_SECRET_ACCESS_KEY: ((aws_secret_key))
