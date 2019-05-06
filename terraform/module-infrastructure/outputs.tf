@@ -1,3 +1,7 @@
+output "keypair_name" {
+  value = "${var.keypair_name != "" ? "${var.keypair_name}" : "${var.customer}-${var.project}${var.suffix}"}"
+}
+
 output "bastion_ip" {
   value = ["${aws_eip.bastion.*.public_ip}"]
 }
