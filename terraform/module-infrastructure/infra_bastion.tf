@@ -48,7 +48,7 @@ resource "aws_instance" "bastion" {
 
   ami           = "${data.aws_ami.debian_stretch.id}"
   instance_type = "${var.bastion_instance_type}"
-  key_name      = "${var.keypair_name}"
+  key_name      = "${var.keypair_name != "" ? "${var.keypair_name}" : "${var.customer}-${var.project}${var.suffix}"}"
 
   vpc_security_group_ids = ["${compact(list(
     "${var.metrics_allowed_sg}",
