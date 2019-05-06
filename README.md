@@ -107,19 +107,20 @@ In order to run this task, couple elements are required within the infrastructur
 
 | Name | Description |
 |------|-------------|
-| bastion_ip | EIP attached to the bastion EC2 server |
+| bastion_ip | The EIP attached to the bastion EC2 server |
 | deployment_bucket_name | S3 bucket name for the deployment bucket |
 | iam_policy_infra-backup | IAM read and write policy to the S3 backup bucket |
 | iam_policy_infra-logs | IAM write policy to AWS Cloudwatch logs |
 | iam_policy_s3-deployment | IAM read and write policy to the S3 deployment bucket |
-| iam_ses_smtp_user_key | Dedicated SES user |
-| iam_ses_smtp_user_secret | Dedicated SES user secret |
-| infra_bastion_sg_allow | security group ID tp allow SSH traffic from the bastion to the infra instances |
+| iam_ses_smtp_user_key | The dedicated SES user |
+| iam_ses_smtp_user_secret | The dedicated SES user secret |
+| infra_bastion_sg_allow | The security group ID to allow SSH traffic from the bastion to the infra instances |
 | infra_private_subnets | The private subnets for the infra VPC |
-| infra_private_zone_id | Route53 private zone ID for the infra VPC |
+| infra_private_zone_id | The Route53 private zone ID for the infra VPC |
 | infra_public_subnets | The public subnets for the infra VPC |
-| infra_rds_parameters-mysql57 | RDS parameter group ID for the infra VPC |
+| infra_rds_parameters-mysql57 | The RDS parameter group ID for the infra VPC |
 | infra_vpc_id | The VPC ID for the infra VPC |
+| keypair_name | The deployment keypair name |
 | prod_bastion_sg_allow | security group ID tp allow SSH traffic from the bastion to the prod instances |
 | prod_elasticache_subnet_group | The elasticache subnet group for the prod VPC |
 | prod_elasticache_subnets | The elasticache subnets for the prod VPC |
