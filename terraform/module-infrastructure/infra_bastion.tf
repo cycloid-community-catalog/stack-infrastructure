@@ -57,7 +57,7 @@ resource "aws_instance" "bastion" {
 
   iam_instance_profile    = "${aws_iam_instance_profile.infra.name}"
   subnet_id               = "${element(module.infra_vpc.public_subnets, count.index)}"
-  disable_api_termination = true
+  disable_api_termination = false
 
   tags {
     Name       = "${var.customer}-bastion${count.index}${var.suffix}"
