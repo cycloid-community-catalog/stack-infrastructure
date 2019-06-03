@@ -81,7 +81,11 @@ In order to run this task, couple elements are required within the infrastructur
 |`aws_region`|Name of the region where the infrastructure is created|`-`|`us-east-1`|`False`|
 |`backup_bucket_prefix`|Prefix for the S3 backup bucket (change it if a bucket with the same name already exists) - defaults to '${var.customer}-'|`-`|`""`|`False`|
 |`bastion_allowed_networks`|Networks allowed to connect to the bastion using SSH|`-`|`0.0.0.0/0`|`False`|
-|`bastion_instance_type`|Instance type for the bastion|`-`|`t2.micro`|`False`|
+|`bastion_instance_type`|Instance type for the bastion|`-`|`t3.micro`|`False`|
+|`create_infra_user`|admin user infra has to be created or not|`int`|`0`|`False`|
+|`create_s3_bucket_remote_state`|terraform_remote_state s3 bucket has to be created or not|`int`|`0`|`False`|
+|`enable_dynamodb_endpoint`|Should be true if you want to provision a DynamoDB endpoint to the VPC|`bool`|`false`|`False`|
+|`enable_s3_endpoint`|Should be true if you want to provision an S3 endpoint to the VPC|`bool`|`false`|`False`|
 |`extra_admin_users`|List of users to give the administrator access role to|`list`|`[]`|`False`|
 |`infra_cidr`|The CIDR of the infra VPC|`-`|`10.0.0.0/16`|`False`|
 |`infra_private_subnets`|The private subnets for the infra VPC|`list`|`["10.0.0.0/24", "10.0.2.0/24", "10.0.4.0/24"]`|`False`|
@@ -102,6 +106,7 @@ In order to run this task, couple elements are required within the infrastructur
 |`staging_public_subnets`|The public subnets for the staging VPC|`list`|`["10.1.1.0/24", "10.1.3.0/24", "10.1.5.0/24"]`|`False`|
 |`staging_rds_subnets`|The RDS subnets for the staging VPC|`list`|`["10.1.2.0/24", "10.1.6.0/24", "10.1.10.0/24"]`|`False`|
 |`zones`|The availability zones you want to use|`-`|`[]`|`False`|
+
 
 **Outputs**
 

@@ -55,6 +55,9 @@ module "prod_vpc" {
   enable_dhcp_options      = true
   dhcp_options_domain_name = "${var.customer}.prod"
 
+  enable_s3_endpoint       = "${var.enable_s3_endpoint}"
+  enable_dynamodb_endpoint = "${var.enable_dynamodb_endpoint}"
+
   tags = {
     client     = "${var.customer}"
     project    = "${var.project}"
