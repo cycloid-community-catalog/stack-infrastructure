@@ -45,7 +45,7 @@ locals {
 
 module "infra_vpc" {
   #  source = "terraform-aws-modules/vpc/aws"
-  source = "https://github.com/terraform-aws-modules/terraform-aws-vpc.git//?ref=terraform011"
+  source = "github.com/terraform-aws-modules/terraform-aws-vpc.git?ref=terraform011"
 
   name = "${var.customer}-infra${var.suffix}"
   azs  = "${var.zones}"
