@@ -16,6 +16,12 @@ variable "infra_public_subnets" {
   default     = ["10.0.1.0/24", "10.0.3.0/24", "10.0.5.0/24"]
 }
 
+# Allow the infra VPC to access prod and staging privates zones.
+variable "infra_associate_vpc_to_all_private_zones" {
+  description = "Should be true if you want to associate the infra VPC to staging and prod privates zones."
+  default     = false
+}
+
 variable "bastion_count" {
   description = "Number of bastions to create (use 0 if you want no bastion)"
   default     = 1

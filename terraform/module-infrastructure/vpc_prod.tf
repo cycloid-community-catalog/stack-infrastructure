@@ -186,6 +186,16 @@ resource "aws_route53_zone" "prod_private" {
     client     = "${var.customer}"
     cycloid.io = "true"
   }
+
+  lifecycle {
+    ignore_changes = ["vpc"]
+  }
+}
+
+resource "aws_route53_zone_association" "prod_private_infra" {
+  zone_id = "${aws_route53_zone.prod_private.zone_id}"
+  vpc_id  = "${module.infra_vpc.vpc_id}"
+  count   = "${var.infra_associate_vpc_to_all_private_zones ? 1 : 0}"
 }
 
 #

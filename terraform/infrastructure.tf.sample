@@ -49,6 +49,10 @@ module "infrastructure" {
   #+ The public subnets for the infra VPC
   infra_public_subnets  = ["10.0.1.0/24", "10.0.3.0/24", "10.0.5.0/24"]
 
+  #. infra_associate_vpc_to_all_private_zones (optional, bool): false
+  #+ Should be true if you want to associate the infra VPC to staging and prod privates zones.
+  #infra_associate_vpc_to_all_private_zones = false
+
   #
   # staging VPC
   #
