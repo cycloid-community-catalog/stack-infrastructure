@@ -41,7 +41,8 @@ locals {
 # Create VPC
 #
 module "staging_vpc" {
-  source = "terraform-aws-modules/vpc/aws"
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> v1.0"
 
   name = "${var.customer}-staging${var.suffix}"
   azs  = "${var.zones}"

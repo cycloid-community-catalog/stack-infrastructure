@@ -44,7 +44,8 @@ locals {
 #
 
 module "infra_vpc" {
-  source = "terraform-aws-modules/vpc/aws"
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> v1.0"
 
   name = "${var.customer}-infra${var.suffix}"
   azs  = "${var.zones}"
