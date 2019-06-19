@@ -37,7 +37,8 @@ variable "prod_redshift_subnets" {
 #
 
 module "prod_vpc" {
-  source = "terraform-aws-modules/vpc/aws"
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> v1.0"
 
   name = "${var.customer}-prod${var.suffix}"
   azs  = "${var.zones}"
