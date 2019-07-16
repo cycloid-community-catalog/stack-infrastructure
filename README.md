@@ -55,7 +55,6 @@ In order to run this task, couple elements are required within the infrastructur
 |`config_git_repository`|Git repository url containing the config of the stack.|`-`|`ssh://myUserId@git-codecommit.eu-west-1.amazonaws.com/v1/repos/myRepo`|`True`|
 |`customer`|Name of the Cycloid Organization, used as customer variable name.|`-`|`($ organization_canonical $)`|`True`|
 |`env`|Name of the project's environment.|`-`|`($ environment $)`|`True`|
-|`git_check_every`|Time between 2 check on git resources|`-`|`2m`|`False`|
 |`project`|Name of the project.|`-`|`($ project $)`|`True`|
 |`stack_git_branch`|Git branch of the stack source code.|`-`|`master`|`True`|
 |`stack_git_repository`|Url to the git repository containing infrastructure stack source code.|`-`|`https://github.com/cycloid-community-catalog/stack-infrastructure`|`True`|

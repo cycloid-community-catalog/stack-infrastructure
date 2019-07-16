@@ -89,7 +89,6 @@ resources:
   source:
     uri: ((stack_git_repository))
     branch: ((stack_git_branch))
-    check_every: ((git_check_every))
     paths:
       - ansible/*
 
@@ -100,7 +99,6 @@ resources:
   source:
     uri: ((config_git_repository))
     branch: ((config_git_branch))
-    check_every: ((git_check_every))
     private_key: ((config_git_private_key))
     paths:
       - ((project))/ansible/*
@@ -111,7 +109,6 @@ resources:
   source:
     uri: ((stack_git_repository))
     branch: ((stack_git_branch))
-    check_every: ((git_check_every))
     paths:
     - terraform/*
 
@@ -120,7 +117,6 @@ resources:
   source:
     uri: ((config_git_repository))
     branch: ((config_git_branch))
-    check_every: ((git_check_every))
     private_key: ((config_git_private_key))
     paths:
     - ((project))/terraform/*

@@ -79,9 +79,3 @@ project: ($ project $)
 #. customer (required): ($ organization_canonical $)
 #+ Name of the Cycloid Organization, used as customer variable name.
 customer: ($ organization_canonical $)
-
-#. git_check_every: 2m
-#+ Time between 2 check on git resources
-git_check_every: 2m
-
-
