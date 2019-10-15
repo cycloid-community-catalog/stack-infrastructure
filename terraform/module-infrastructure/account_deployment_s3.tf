@@ -14,12 +14,12 @@ resource "aws_s3_bucket" "deployment" {
     }
   }
 
-  tags {
+  tags = {
     Name       = "deployment"
-    client     = "${var.customer}"
-    project    = "${var.project}"
-    env        = "${var.env}"
-    cycloid.io = "true"
+    client     = var.customer
+    project    = var.project
+    env        = var.env
+    "cycloid.io" = "true"
   }
 }
 
@@ -63,9 +63,10 @@ data "aws_iam_policy_document" "s3-deployment" {
 resource "aws_iam_policy" "s3-deployment" {
   name        = "deployment_access"
   description = "Grant s3 access on bucket ${aws_s3_bucket.deployment.id}"
-  policy      = "${data.aws_iam_policy_document.s3-deployment.json}"
+  policy      = data.aws_iam_policy_document.s3-deployment.json
 }
 
 output "iam_policy_s3-deployment" {
-  value = "${aws_iam_policy.s3-deployment.arn}"
+  value = aws_iam_policy.s3-deployment.arn
 }
+

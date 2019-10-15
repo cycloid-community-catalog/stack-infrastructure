@@ -4,15 +4,15 @@
 module "infrastructure" {
   #####################################
   # Do not modify the following lines #
-  source = "module-infrastructure"
-  project = "${var.project}"
-  env     = "${var.env}"
-  customer = "${var.customer}"
+  source = "./module-infrastructure"
+  project = var.project
+  env     = var.env
+  customer = var.customer
   #####################################
 
   #. aws_region: us-east-1
   #+ Name of the region where the infrastructure is created
-  aws_region = "${var.aws_region}"
+  aws_region = var.aws_region
 
   #. keypair_name: "${var.customer}-${var.project}${var.suffix}"
   #+ The human-readable keypair name to be used for instances deployment

@@ -21,7 +21,7 @@ variable "suffix" {
 }
 
 variable "backup_bucket_prefix" {
-  description = "Prefix for the S3 backup bucket (change it if a bucket with the same name already exists) - defaults to '${var.customer}-'"
+  description = "Prefix for the S3 backup bucket (change it if a bucket with the same name already exists) - defaults to '$${var.customer}-'"
   default     = ""
 }
 
@@ -29,14 +29,14 @@ variable "backup_bucket_prefix" {
 
 variable "create_s3_bucket_remote_state" {
   description = "To know if a terraform_remote_state s3 bucket has to be created or not"
-  default     = 0
+  default     = false
 }
 
 ##### IAM and authorizations
 
 variable "create_infra_user" {
   description = "To know if an admin user infra has to be created or not"
-  default     = 0
+  default     = false
 }
 
 variable "extra_admin_users" {
@@ -99,3 +99,4 @@ variable "enable_s3_endpoint" {
   description = "Should be true if you want to provision an S3 endpoint to the VPC"
   default     = false
 }
+
