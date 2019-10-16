@@ -103,7 +103,7 @@ module "infrastructure" {
 
   #. backup_bucket_prefix: ""
   #+ Prefix for the S3 backup bucket (change it if a bucket with the same name already exists) - defaults to '${var.customer}-'
-  backup_bucket_prefix = "${var.customer}-${data.aws_region.current.name}-"
+  backup_bucket_prefix = "${var.customer}-${var.env}"
 
   #. extra_admin_users (optional, list): []
   #+ List of users to give the administrator access role to
