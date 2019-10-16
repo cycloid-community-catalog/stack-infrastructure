@@ -86,10 +86,8 @@ variable "keypair_public" {
 # Oce we can "count" the modules, we may even use a list of maps, allowing to
 # define any number of VPCs.
 
-variable "aws_region" {
-  description = "Name of the region where the infrastructure is created"
-  default     = "us-east-1"
-}
+data "aws_region" "current" {}
+
 
 variable "zones" {
   description = "The availability zones you want to use"
