@@ -14,13 +14,9 @@ resource "aws_s3_bucket" "deployment" {
     }
   }
 
-  tags = {
+  tags = merge(local.merged_tags, {
     Name       = "deployment"
-    client     = var.customer
-    project    = var.project
-    env        = var.env
-    "cycloid.io" = "true"
-  }
+  })
 }
 
 # S3 deployment policy

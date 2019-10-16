@@ -68,12 +68,7 @@ module "staging_vpc" {
   enable_s3_endpoint       = var.enable_s3_endpoint
   enable_dynamodb_endpoint = var.enable_dynamodb_endpoint
 
-  tags = {
-    client     = var.customer
-    project    = var.project
-    env        = var.env
-    "cycloid.io" = "true"
-  }
+  tags = local.merged_tags
 }
 
 resource "aws_vpc_peering_connection" "infra_staging" {
@@ -81,13 +76,9 @@ resource "aws_vpc_peering_connection" "infra_staging" {
   vpc_id      = module.staging_vpc.vpc_id
   auto_accept = true
 
-  tags = {
+  tags = merge(local.merged_tags, {
     Name       = "VPC Peering between infra and staging"
-    client     = var.customer
-    project    = var.project
-    env        = var.env
-    "cycloid.io" = "true"
-  }
+  })
 }
 
 resource "aws_route" "infra_staging_public" {
@@ -148,13 +139,9 @@ resource "aws_security_group" "allow_bastion_staging" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
+  tags = merge(local.merged_tags, {
     Name       = "allow-bastion-staging${var.suffix}"
-    client     = var.customer
-    project    = var.project
-    env        = var.env
-    "cycloid.io" = "true"
-  }
+  })
 }
 
 # Create route53 zones
@@ -166,12 +153,7 @@ resource "aws_route53_zone" "staging_private" {
     vpc_id = module.staging_vpc.vpc_id
   }
 
-  tags = {
-    client     = var.customer
-    project    = var.project
-    env        = var.env
-    "cycloid.io" = "true"
-  }
+  tags = local.merged_tags
 
   lifecycle {
     ignore_changes = [vpc]

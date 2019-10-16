@@ -19,13 +19,9 @@ resource "aws_security_group" "bastion" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
+  tags = merge(local.merged_tags, {
     Name       = "bastion${var.suffix}"
-    client     = var.customer
-    project    = var.project
-    env        = var.env
-    "cycloid.io" = "true"
-  }
+  })
 }
 
 resource "aws_eip" "bastion" {
@@ -34,13 +30,9 @@ resource "aws_eip" "bastion" {
   instance = aws_instance.bastion[0].id
   vpc      = true
 
-  tags = {
+  tags = merge(local.merged_tags, {
     Name       = "${var.customer}-bastion${count.index}${var.suffix}"
-    client     = var.customer
-    project    = var.project
-    env        = var.env
-    "cycloid.io" = "true"
-  }
+  })
 }
 
 resource "aws_instance" "bastion" {
@@ -56,14 +48,10 @@ resource "aws_instance" "bastion" {
   subnet_id               = element(module.infra_vpc.public_subnets, count.index)
   disable_api_termination = false
 
-  tags = {
+  tags = merge(local.merged_tags, {
     Name       = "${var.customer}-bastion${count.index}${var.suffix}"
-    client     = var.customer
-    env        = var.env
-    project    = var.project
     role       = "bastion"
-    "cycloid.io" = "true"
-  }
+  })
 
   lifecycle {
     ignore_changes = [ami]

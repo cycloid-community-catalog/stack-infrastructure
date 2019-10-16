@@ -55,11 +55,13 @@ In order to run this task, couple elements are required within the infrastructur
 |`config_git_repository`|Git repository url containing the config of the stack.|`-`|`ssh://myUserId@git-codecommit.eu-west-1.amazonaws.com/v1/repos/myRepo`|`True`|
 |`customer`|Name of the Cycloid Organization, used as customer variable name.|`-`|`($ organization_canonical $)`|`True`|
 |`env`|Name of the project's environment.|`-`|`($ environment $)`|`True`|
+|`extra_tags`|Dict of extra tags to add on aws resources. format { "foo" = "bar" }.|`-`|`{}`|`False`|
 |`project`|Name of the project.|`-`|`($ project $)`|`True`|
 |`stack_git_branch`|Git branch of the stack source code.|`-`|`master`|`True`|
 |`stack_git_repository`|Url to the git repository containing infrastructure stack source code.|`-`|`https://github.com/cycloid-community-catalog/stack-infrastructure`|`True`|
 |`terraform_storage_bucket_name`|AWS S3 bucket name to store terraform remote state file.|`-`|`($ organization_canonical $)-terraform-remote-state`|`True`|
 |`terraform_storage_bucket_path`|AWS S3 bucket path to store terraform remote state file.|`-`|`($ project $)/($ environment $)`|`True`|
+
 
 ## Terraform
 

@@ -9,12 +9,8 @@ resource "aws_s3_bucket" "terraform_remote_state" {
     enabled = true
   }
 
-  tags = {
+  tags = merge(local.merged_tags, {
     Name       = "terraform-remote-state"
-    client     = var.customer
-    project    = var.project
-    env        = var.env
-    "cycloid.io" = "true"
-  }
+  })
 }
 

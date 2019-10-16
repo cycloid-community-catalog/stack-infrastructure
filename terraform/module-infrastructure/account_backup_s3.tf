@@ -33,14 +33,9 @@ resource "aws_s3_bucket" "backup" {
     ignore_changes = [lifecycle_rule]
   }
 
-  tags = {
+  tags = merge(local.merged_tags, {
     Name       = "${local.backup_bucket_prefix}backup"
-    client     = var.customer
-    customer   = var.customer
-    project    = var.project
-    env        = var.env
-    "cycloid.io" = "true"
-  }
+  })
 }
 
 // Expose iam policy for backups
