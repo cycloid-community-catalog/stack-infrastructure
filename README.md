@@ -69,7 +69,6 @@ In order to run this task, couple elements are required within the infrastructur
 
 |Name|Description|Type|Default|Required|
 |---|---|:---:|:---:|:---:|
-|`aws_region`|Name of the region where the infrastructure is created|`-`|`us-east-1`|`False`|
 |`backup_bucket_prefix`|Prefix for the S3 backup bucket (change it if a bucket with the same name already exists) - defaults to '${var.customer}-'|`-`|`""`|`False`|
 |`bastion_allowed_networks`|Networks allowed to connect to the bastion using SSH|`-`|`0.0.0.0/0`|`False`|
 |`bastion_instance_type`|Instance type for the bastion|`-`|`t3.micro`|`False`|

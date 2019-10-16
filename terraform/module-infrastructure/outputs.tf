@@ -19,6 +19,6 @@ output "deployment_bucket_name" {
 }
 
 output "zones" {
-  value = var.zones
+  value = local.aws_availability_zones
 }
 

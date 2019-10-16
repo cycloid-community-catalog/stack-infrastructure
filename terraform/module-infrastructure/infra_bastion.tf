@@ -61,7 +61,7 @@ resource "aws_instance" "bastion" {
 resource "aws_cloudwatch_metric_alarm" "recover-bastion" {
   count = var.bastion_count
 
-  alarm_actions     = ["arn:aws:automate:${var.aws_region}:ec2:recover"]
+  alarm_actions     = ["arn:aws:automate:${data.aws_region.current.name}:ec2:recover"]
   alarm_description = "Recover the instance"
 
   alarm_name          = "recover-bastion${var.suffix}"

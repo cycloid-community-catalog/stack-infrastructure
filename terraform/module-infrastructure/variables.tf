@@ -88,10 +88,17 @@ variable "keypair_public" {
 
 data "aws_region" "current" {}
 
+data "aws_availability_zones" "available" {
+  state = "available"
+}
 
 variable "zones" {
-  description = "The availability zones you want to use"
+  description = "To use specific AWS Availability Zones."
   default     = []
+}
+
+locals {
+  aws_availability_zones = length(var.zones) > 0 ? var.zones : data.aws_availability_zones.available.names
 }
 
 # Allow metrics (prometheus) to collect data from bastion

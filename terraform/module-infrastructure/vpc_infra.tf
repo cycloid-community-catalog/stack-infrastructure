@@ -42,7 +42,7 @@ locals {
   infra_max_subnet_length = max(length(var.infra_private_subnets))
 
   #infra_max_subnet_length = "${max(length(var.infra_private_subnets), length(var.infra_elasticache_subnets), length(var.infra_rds_subnets), length(var.infra_redshift_subnets))}"
-  infra_nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.zones) : local.infra_max_subnet_length
+  infra_nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(local.aws_availability_zones) : local.infra_max_subnet_length
 }
 
 #
@@ -54,7 +54,7 @@ module "infra_vpc" {
   version = "~> v2.17"
 
   name = "${var.customer}-infra${var.suffix}"
-  azs  = var.zones
+  azs  = local.aws_availability_zones
   cidr = var.infra_cidr
 
   private_subnets    = var.infra_private_subnets

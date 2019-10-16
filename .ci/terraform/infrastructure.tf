@@ -18,8 +18,7 @@ module "infrastructure" {
   keypair_public = "ssh-rsa XXX"
 
   #. zones: []
-  #+ The availability zones you want to use
-  zones = ["${var.aws_region}a", "${var.aws_region}b", "${var.aws_region}c"]
+  #+ To use specific AWS Availability Zones.
 
   #. enable_dynamodb_endpoint (optional, bool): false
   #+ Should be true if you want to provision a DynamoDB endpoint to the VPC
@@ -104,7 +103,7 @@ module "infrastructure" {
 
   #. backup_bucket_prefix: ""
   #+ Prefix for the S3 backup bucket (change it if a bucket with the same name already exists) - defaults to '${var.customer}-'
-  backup_bucket_prefix = "${var.customer}-${var.aws_region}-"
+  backup_bucket_prefix = "${var.customer}-${data.aws_region.current.name}-"
 
   #. extra_admin_users (optional, list): []
   #+ List of users to give the administrator access role to

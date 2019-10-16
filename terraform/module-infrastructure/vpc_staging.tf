@@ -39,7 +39,7 @@ locals {
     length(var.staging_rds_subnets),
     length(var.staging_redshift_subnets),
   )
-  staging_nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.zones) : local.staging_max_subnet_length
+  staging_nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(local.aws_availability_zones) : local.staging_max_subnet_length
 }
 
 #
@@ -50,7 +50,7 @@ module "staging_vpc" {
   version = "~> v2.17"
 
   name = "${var.customer}-staging${var.suffix}"
-  azs  = var.zones
+  azs  = local.aws_availability_zones
   cidr = var.staging_cidr
 
   private_subnets     = var.staging_private_subnets

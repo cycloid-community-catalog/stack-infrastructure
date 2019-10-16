@@ -41,7 +41,7 @@ module "prod_vpc" {
   version = "~> v2.17"
 
   name = "${var.customer}-prod${var.suffix}"
-  azs  = var.zones
+  azs  = local.aws_availability_zones
   cidr = var.prod_cidr
 
   private_subnets     = var.prod_private_subnets
@@ -95,7 +95,7 @@ locals {
     length(var.prod_rds_subnets),
     length(var.prod_redshift_subnets),
   )
-  prod_nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.zones) : local.prod_max_subnet_length
+  prod_nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(local.aws_availability_zones) : local.prod_max_subnet_length
 }
 
 resource "aws_route" "infra_prod_public" {
