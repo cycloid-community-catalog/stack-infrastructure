@@ -20,7 +20,7 @@ git_key: ((git_github.ssh_key))
 
 #. terraform_version (required): latest
 #+ terraform version to validate the stack.
-terraform_version: 0.12.10
+terraform_version: latest
 
 #. terraform_env_vars (required): dict
 #+ terraform configuration to validate the stack.
@@ -37,11 +37,15 @@ pipeline_env_vars:
   USERNAME: ((cycloid_bot_account.login))
   PASSWORD: ((cycloid_bot_account.password))
   # TEMPLATE to use in the stack
-  PIPELINE_TEMPLATE: infrastructure.yml
+  PIPELINE_TEMPLATE: pipeline.yml
   # VARIABLES to use to create the PIPELINE_TEMPLATE
   PIPELINE_VARIABLES: variables.sample.yml
   # Where to create the pipeline
   ORGANIZATION: cycloid-owl
+  # Which project to use for pipeline
+  PROJECT: ci-stack-infrastructure
+  # Which environment to use for pipeline
+  ENVIRONMENT: master
   # Tmp name to create the pipeline
   PIPELINE_NAME: ci-stack-infrastructure-master-validate
 
@@ -54,7 +58,6 @@ stack_terraform_path: terraform
 #+ Path of pipeline variables files in the config git repository
 config_pipeline_path: .ci/pipeline
 stack_pipeline_path: pipeline
-
 
 #
 # Default variables that shouldn't be changed except if needed
@@ -71,4 +74,16 @@ project: ci-stack-infrastructure
 #. customer (required): cycloid-owl
 #+ Name of the Cycloid Organization, used as customer variable name.
 customer: cycloid-owl
+
+#. git_stack-validate_repository (required): git@github.com:cycloidio/cycloid-stacks.git
+#+ Git repository URL of the stack-validate.
+git_stack-validate_repository: git@github.com:cycloidio/cycloid-stacks.git
+
+#. git_branch (required): stacks
+#+ Branch of the of the stack-validate.
+git_stack-validate_branch: stacks
+
+#. git_key (required): ((git.ssh_key))
+#+ SSH key pair to fetch the stack-validate.
+git_stack-validate_key: ((git_github.ssh_key))
 
