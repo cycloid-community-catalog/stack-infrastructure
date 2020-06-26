@@ -63,7 +63,7 @@ resources:
 - name: tfstate
   type: terraform
   source:
-    env_name: ((project))-((env))
+    env_name: ((env))
     backend_type: s3
     backend_config:
       bucket: ((terraform_storage_bucket_name))
