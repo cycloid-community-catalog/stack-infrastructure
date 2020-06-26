@@ -8,6 +8,11 @@ output "bastion_ip" {
   value       = module.infrastructure.bastion_ip
 }
 
+output "bastion_sg" {
+  description = "The bastion security group ID."
+  value       = module.infrastructure.bastion_sg
+}
+
 output "infra_vpc_id" {
   description = "The VPC ID for the infra VPC"
   value       = module.infrastructure.infra_vpc_id
