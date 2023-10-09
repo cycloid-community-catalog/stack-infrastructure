@@ -78,7 +78,7 @@ In order to run this task, couple elements are required within the infrastructur
 |`enable_dynamodb_endpoint`|Should be true if you want to provision a DynamoDB endpoint to the VPC|`bool`|`false`|`False`|
 |`enable_s3_endpoint`|Should be true if you want to provision an S3 endpoint to the VPC|`bool`|`false`|`False`|
 |`extra_admin_users`|List of users to give the administrator access role to|`list`|`[]`|`False`|
-|`infra_associate_vpc_to_all_private_zones`|Should be true if you want to associate the infra VPC to staging and prod privates zones.|`bool`|`false`|`False`|
+|`infra_associate_vpc_to_all_private_zones`|Should be true if you want to associate the infra VPC to dev, staging and prod privates zones.|`bool`|`false`|`False`|
 |`infra_cidr`|The CIDR of the infra VPC|`-`|`10.0.0.0/16`|`False`|
 |`infra_private_subnets`|The private subnets for the infra VPC|`list`|`["10.0.0.0/24", "10.0.2.0/24", "10.0.4.0/24"]`|`False`|
 |`infra_public_subnets`|The public subnets for the infra VPC|`list`|`["10.0.1.0/24", "10.0.3.0/24", "10.0.5.0/24"]`|`False`|
@@ -97,6 +97,11 @@ In order to run this task, couple elements are required within the infrastructur
 |`staging_private_subnets`|The private subnets for the staging VPC|`list`|`["10.1.0.0/24", "10.1.2.0/24", "10.1.4.0/24"]`|`False`|
 |`staging_public_subnets`|The public subnets for the staging VPC|`list`|`["10.1.1.0/24", "10.1.3.0/24", "10.1.5.0/24"]`|`False`|
 |`staging_rds_subnets`|The RDS subnets for the staging VPC|`list`|`["10.1.2.0/24", "10.1.6.0/24", "10.1.10.0/24"]`|`False`|
+|`dev_cidr`|The CIDR of the dev VPC|`-`|`10.3.0.0/16`|`False`|
+|`dev_elasticache_subnets`|The Elasticache subnets for the dev VPC|`list`|`[]`|`False`|
+|`dev_private_subnets`|The private subnets for the dev VPC|`list`|`["10.3.0.0/24", "10.3.2.0/24", "10.3.4.0/24"]`|`False`|
+|`dev_public_subnets`|The public subnets for the dev VPC|`list`|`["10.3.1.0/24", "10.3.3.0/24", "10.3.5.0/24"]`|`False`|
+|`dev_rds_subnets`|The RDS subnets for the dev VPC|`list`|`["10.3.2.0/24", "10.3.6.0/24", "10.3.10.0/24"]`|`False`|
 |`zones`|The availability zones you want to use|`-`|`[]`|`False`|
 
 
@@ -144,7 +149,19 @@ In order to run this task, couple elements are required within the infrastructur
 | staging_rds_subnets | The RDS subnets for the staging VPC |
 | staging_redshift_subnet_group | The Redshift subnet group for the staging VPC |
 | staging_redshift_subnets | The redshift subnets for the staging VPC |
-| staging_vpc_id | The VPC ID for the staging VPC |
+| dev_vpc_id | The VPC ID for the dev VPC |
+| dev_bastion_sg_allow | security group ID tp allow SSH traffic from the bastion to the dev instances |
+| dev_elasticache_subnet_group | The elasticache subnet group for the dev VPC |
+| dev_elasticache_subnets | The elasticache subnets for the dev VPC |
+| dev_private_subnets | The private subnets for the dev VPC |
+| dev_private_zone_id | Route53 private zone ID for the dev VPC |
+| dev_public_subnets | The public subnets for the dev VPC |
+| dev_rds_parameters-mysql57 | RDS db parameters ID for the dev VPC |
+| dev_rds_subnet_group | The RDS subnet group for the dev VPC |
+| dev_rds_subnets | The RDS subnets for the dev VPC |
+| dev_redshift_subnet_group | The Redshift subnet group for the dev VPC |
+| dev_redshift_subnets | The redshift subnets for the dev VPC |
+| dev_vpc_id | The VPC ID for the dev VPC |
 | zones | AWS availability zones used |
 
 
