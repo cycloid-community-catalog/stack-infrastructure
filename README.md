@@ -2,7 +2,7 @@
 
 Service catalog infrastructure stack
 
-This stack will create Amazon vpc, a bastion ec2 server and various components you might require to deploy other stacks in production.
+This stack will provision an Amazon VPC along with a bastion EC2 server and various components necessary for deploying other stacks in a production environment.
 
 # Architecture
 
