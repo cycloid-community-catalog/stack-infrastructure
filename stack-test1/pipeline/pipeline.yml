@@ -1,0 +1,174 @@
+# Declare YAML anchors to reuse later in the YAML document.
+# This helps reducing bloat in YAML files by removing code duplication.
+# See: https://docs.cycloid.io/deploy/stackforms/advanced.html#yaml-anchors-and-aliases
+definitions:
+  tasks:
+    # The task producing a configured stack, merging stack and config.
+    - &task-merge-stack-and-config
+      task: merge-stack-and-config
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source:
+            repository: cycloid/cycloid-toolkit
+            tag: latest
+        run:
+          path: /usr/bin/merge-stack-and-config
+        inputs:
+          - name: git_config
+            path: "config"
+          - name: git_stack
+            path: "stack"
+        outputs:
+          - name: merged-stack
+            path: "merged-stack"
+      params:
+        CONFIG_PATH: ((project))/terraform/((env))
+        STACK_PATH: ((stack_path))/terraform
+
+# Declare Concourse resource types to determine versions and sources to use in the pipeline.
+# See: https://concourse-ci.org/resource-types.html
+resource_types:
+- name: terraform
+  type: registry-image
+  source:
+    repository: cycloid/terraform-resource
+    tag: '1.6.5'
+
+# Declare resources to be invoked later in jobs.
+resources:
+# The Terraform Concourse resource to manage infrastructure via Terraform.
+# See: https://github.com/cycloidio/terraform-resource#source-configuration
+- name: tfstate
+  type: terraform
+  icon: terraform
+  source:
+    # Use Cycloid Terraform HTTP backend.
+    backend_type: http
+    backend_config:
+      address: '($ api_url $)/inventory?jwt=($ inventory_jwt $)'
+      skip_cert_verification: true
+    env_name: ((env))
+    vars:
+      env: ((env))
+      project: ((project))
+      organization: ((org))
+      {%- if stack_usecase == "aws" %}
+      aws_cred: ((aws_cred))
+      aws_region: ((aws_default_region))
+      {%- elif stack_usecase == "gcp" %}
+      gcp_project: ((gcp_project))
+      gcp_zone: ((gcp_zone))
+      {%- elif stack_usecase == "azure" %}
+      azure_env: ((azure_env))
+      azure_cred: ((azure_cred))
+      {%- endif %}
+    {%- if stack_usecase == "gcp" %}
+    env:
+      GOOGLE_PROJECT: ((gcp_project))
+      GOOGLE_ZONE: ((gcp_zone))
+      GOOGLE_CREDENTIALS: ((gcp_credentials_json))
+    {%- endif %}
+# The Terraform stack (will be merged with the config).
+- name: git_stack
+  type: git
+  icon: github-circle
+  source:
+    uri: ($ scs_url $)
+    branch: ($ scs_branch $)
+    {%- if scs_cred_type == "basic_auth" %}
+    username: ((stack_git_username))
+    password: ((stack_git_password))
+    {%- else %}
+    private_key: ((stack_git_private_key))
+    {%- endif %}
+    # Include only the Terraform files in the specified directory.
+    paths:
+      - ((stack_path))/terraform/*
+# The Terraform config (will be merged with the stack).
+- name: git_config
+  type: git
+  icon: github-circle
+  source:
+    uri: ($ cr_url $)
+    branch: ($ cr_branch $)
+    {%- if scs_cred_type == "basic_auth" %}
+    username: ((config_git_username))
+    password: ((config_git_password))
+    {%- else %}
+    private_key: ((config_git_private_key))
+    {%- endif %}
+    # Include only the Terraform files in the specified directory.
+    paths:
+      - ((project))/terraform/((env))/*
+
+# Define jobs that form the pipeline
+jobs:
+  - name: terraform-plan
+    serial: true
+    serial_groups: [terraform]
+    max_in_flight: 1
+    build_logs_to_retain: 10
+    plan:
+      - do:
+        - get: git_stack
+          trigger: true
+        - get: git_config
+          trigger: true
+        - *task-merge-stack-and-config
+        - put: tfstate
+          params:
+            plan_only: true
+            terraform_source: merged-stack/
+  - name: terraform-apply
+    serial: true
+    serial_groups: [terraform]
+    build_logs_to_retain: 10
+    plan:
+      - do:
+        - get: git_stack
+          trigger: false
+          passed:
+            - terraform-plan
+        - get: git_config
+          trigger: false
+          passed:
+            - terraform-plan
+        - get: tfstate
+          trigger: false
+          passed:
+            - terraform-plan
+        - *task-merge-stack-and-config
+        - put: tfstate
+          params:
+            plan_run: true
+            terraform_source: merged-stack/
+  - name: terraform-destroy
+    serial: true
+    serial_groups: [terraform]
+    build_logs_to_retain: 10
+    plan:
+      - do:
+          - get: git_stack
+            trigger: false
+          - get: git_config
+            trigger: false
+          - *task-merge-stack-and-config
+          - put: tfstate
+            params:
+              action: destroy
+              terraform_source: merged-stack/
+            get_params:
+              action: destroy
+
+# Organize jobs into groups.
+# See: https://concourse-ci.org/pipelines.html#schema.pipeline.groups
+groups:
+- name: overview
+  jobs:
+  - terraform-plan
+  - terraform-apply
+- name: destroy
+  jobs:
+  - terraform-destroy
