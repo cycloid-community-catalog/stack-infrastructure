@@ -4,7 +4,7 @@ shared:
   - &merge-stack-and-config
     platform: linux
     image_resource:
-      type: docker-image
+      type: registry-image
       source:
         repository: cycloid/cycloid-toolkit
         tag: latest
@@ -28,7 +28,7 @@ shared:
     config:
       platform: linux
       image_resource:
-        type: docker-image
+        type: registry-image
         source:
           repository: cycloid/cycloid-toolkit
       run:
@@ -53,7 +53,7 @@ groups:
 resource_types:
 
 - name: terraform
-  type: docker-image
+  type: registry-image
   source:
     repository: ljfranklin/terraform-resource
     tag: '0.12.28'
@@ -106,7 +106,7 @@ resources:
     paths:
       - ((project))/ansible/*
 
-
+# The Terraform stack (will be merged with the config)
 - name: git_stack-terraform
   type: git
   source:
@@ -115,6 +115,7 @@ resources:
     paths:
     - terraform/*
 
+# The Terraform config (will be merged with the stack)
 - name: git_config-terraform
   type: git
   source:
@@ -125,6 +126,7 @@ resources:
     - ((project))/terraform/*
 
 jobs:
+# Merge and trigger a plan whenever there is a commit in Terraform stack or config
   - name: terraform-plan
     serial: True
     max_in_flight: 1
@@ -153,13 +155,13 @@ jobs:
             plan_only: true
             terraform_source: merged-stack/
 
+# Merge and trigger an apply manually (no autostart of this job)
   - name: terraform-apply
     serial: True
     max_in_flight: 1
     build_logs_to_retain: 10
     plan:
       - do:
-        # Get the PR on the project #
         - get: git_stack-terraform
           trigger: false
           passed:
